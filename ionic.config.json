@@ -1,0 +1,7 @@
+{
+  "name": "controle-lotes-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
