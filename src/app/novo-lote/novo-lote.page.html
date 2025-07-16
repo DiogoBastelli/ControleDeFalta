@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Novo Lote</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="cadastrarLote()">
+    <ion-item>
+      <ion-label position="floating">Ordem De Montagem</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.om" name="om" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Ordem De Venda</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.ov" name="ov" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Cliente</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.cliente" name="cliente" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Item</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.item" name="item" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Equipamento</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.equipamento" name="equipamento" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Nº equipamentos descidos</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.quantiDesc" name="quantiDesc" required></ion-input>
+    </ion-item>
+
+     <ion-item>
+      <ion-label position="floating">Quantidade total</ion-label>
+      <ion-input type="text" [(ngModel)]="lote.quantiTotal" name="quantiTotal" required></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top">
+      Cadastrar Lote
+    </ion-button>
+  </form>
+</ion-content>

@@ -8,8 +8,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'novo-lote',
     pathMatch: 'full'
+  },
+  {
+    path: 'novo-lote',
+    loadChildren: () => import('./novo-lote/novo-lote.module').then( m => m.NovoLotePageModule)
   },
 ];
 
