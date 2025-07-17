@@ -20,10 +20,26 @@ export class NovoLotePage {
 
   constructor(private loteService: LoteService) {}
 
-  cadastrarLote() {
+ cadastrarLote() {
     this.loteService.cadastrarLote(this.lote).subscribe({
-      next: () => alert('Lote cadastrado com sucesso!'),
-      error: () => alert('Erro ao cadastrar lote')
+      next: (res: any) => {
+        console.log('Resposta da API:', res);
+        alert(res.message || 'Lote cadastrado com sucesso!');
+        this.lote = {
+          om: '',
+          ov: '',
+          cliente: '',
+          item: '',
+          equipamento: '',
+          quantiDesc: '',
+          quantiTotal: ''
+        };
+      },
+      error: (err) => {
+        console.error('Erro ao cadastrar lote:', err);
+        alert('Erro ao cadastrar lote');
+      }
     });
   }
+
 }

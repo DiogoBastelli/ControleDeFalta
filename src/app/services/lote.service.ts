@@ -5,11 +5,10 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class LoteService {
-  private API_URL = 'http://localhost:3000';
-
+  private apiUrl = 'http://localhost:3000/lotes'; 
   constructor(private http: HttpClient) {}
 
   cadastrarLote(lote: any) {
-    return this.http.post(`${this.API_URL}/lotes`, lote);
+    return this.http.post(this.apiUrl, lote);
   }
 }
