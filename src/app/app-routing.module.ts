@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'novo-lote',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
