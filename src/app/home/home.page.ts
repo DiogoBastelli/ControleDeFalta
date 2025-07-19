@@ -21,24 +21,32 @@ export class HomePage implements OnInit {
   }
 
   carregarLotes() {
-    this.loteService.listarLotes().subscribe({
-      next: (res: any) => {
-        this.lotes = res;
-        this.lotesFiltrados = res; 
-      },
-      error: (err) => {
-        console.error('Erro ao buscar lotes:', err);
-        alert('Erro ao buscar lotes');
-      }
-    });
+    this.loteService.listarLotes().subscribe(
+    (res: any) => {
+      this.lotes = res;
+      this.lotesFiltrados = res;
+    },
+    (err) => {
+      console.error('Erro ao buscar lotes:', err);
+      alert('Erro ao buscar lotes');
+    }
+  );
   }
 
-  PesquisarLoteNomeOM() {
-    const termo = this.inputPesquisa.toLowerCase();
+ pesquisarLotes() {
+  const termo = this.inputPesquisa.toLowerCase();
 
-    this.lotesFiltrados = this.lotes.filter(lote => {
-      const valorCampo = lote[this.tipoPesquisa]?.toString().toLowerCase() || '';
-      return valorCampo.includes(termo);
-    });
-  }
+  const campoPesquisaMap: { [key: string]: string } = {
+    om: 'ordem_montagem',
+    cliente: 'cliente'
+  };
+
+  const campoPesquisa = campoPesquisaMap[this.tipoPesquisa] || 'ordem_montagem';
+
+  this.lotesFiltrados = this.lotes.filter(lote => {
+    const valorCampo = lote[campoPesquisa]?.toString().toLowerCase() || '';
+    return valorCampo.includes(termo);
+  });
+}
+
 }

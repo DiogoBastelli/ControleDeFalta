@@ -8,10 +8,21 @@
 
   <ion-toolbar>
     <div class="filtros-toolbar">
-      <ion-searchbar [(ngModel)]="inputPesquisa" id="inputPesquisa" placeholder="Pesquisar" show-clear-button="always"></ion-searchbar>
+      <ion-searchbar
+        [(ngModel)]="inputPesquisa"
+        (ionInput)="pesquisarLotes()"
+        id="inputPesquisa"
+        placeholder="Pesquisar"
+        show-clear-button="always">
+      </ion-searchbar>
 
       <ion-item class="select" lines="none">
-        <ion-select [(ngModel)]="tipoPesquisa" placeholder="Tipo" class="select-personalizado">
+        <ion-select
+          [(ngModel)]="tipoPesquisa"
+          placeholder="Tipo"
+          class="select-personalizado"
+          interface="popover"
+          (ionChange)="pesquisarLotes()">
           <ion-select-option value="om">OM</ion-select-option>
           <ion-select-option value="cliente">Cliente</ion-select-option>
         </ion-select>
@@ -20,9 +31,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="todosLotes" class="ion-padding">
-  <ion-list *ngIf="lotes.length > 0; else vazio">
-    <ion-item *ngFor="let lote of lotes">
+<ion-content>
+  <ion-list *ngIf="lotesFiltrados.length > 0; else vazio">
+    <ion-item *ngFor="let lote of lotesFiltrados">
       <ion-label>
         <h2>{{ lote.ordem_montagem }} - {{ lote.equipamento }}</h2>
         <p>Cliente: {{ lote.cliente }}</p>
@@ -35,9 +46,7 @@
 
   <ng-template #vazio>
     <ion-text color="medium">
-      <p class="ion-text-center">Nenhum lote cadastrado ainda.</p>
+      <p class="ion-text-center">ote encontrado.</p>
     </ion-text>
   </ng-template>
 </ion-content>
-
-
