@@ -20,7 +20,7 @@ export class NovoLotePage {
 
   constructor(private loteService: LoteService) {}
 
- cadastrarLote() {
+  cadastrarLote() {
     this.loteService.cadastrarLote(this.lote).subscribe({
       next: (res: any) => {
         console.log('Resposta da API:', res);
@@ -41,5 +41,7 @@ export class NovoLotePage {
       }
     });
   }
+
+  
 
 }

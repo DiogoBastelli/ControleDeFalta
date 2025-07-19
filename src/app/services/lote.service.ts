@@ -14,6 +14,10 @@ export class LoteService {
   }
   listarLotes() {
   return this.http.get(this.apiUrl); 
-}
+  }
+
+  PesquisarLoteNomeOM() {
+  return this.http.get<any[]>('http://localhost:3000/lotes');
+  }
 
 }

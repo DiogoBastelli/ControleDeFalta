@@ -25,3 +25,42 @@
 #container a {
   text-decoration: none;
 }
+
+#inputPesquisa{
+  border-radius: 30px;
+  color: rgb(255, 255, 255);
+  font-size: medium;
+  text-align: center;
+  width:60%;
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+}
+.filtros-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+ion-searchbar {
+  flex: 1;
+}
+
+.select-personalizado::part(text) {
+  color: white;   
+
+}
+
+
+
+.select-personalizado {
+  --color: white;         
+  border-radius: 8px;
+  background-color: rgb(17, 17, 17);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
+

@@ -9,6 +9,10 @@ import { LoteService } from '../services/lote.service';
 })
 export class HomePage implements OnInit {
   lotes: any[] = [];
+  lotesFiltrados: any[] = [];
+
+  inputPesquisa = '';
+  tipoPesquisa = 'om'; 
 
   constructor(private loteService: LoteService) {}
 
@@ -20,12 +24,21 @@ export class HomePage implements OnInit {
     this.loteService.listarLotes().subscribe({
       next: (res: any) => {
         this.lotes = res;
-        console.log('Lotes:', this.lotes);
+        this.lotesFiltrados = res; 
       },
       error: (err) => {
         console.error('Erro ao buscar lotes:', err);
         alert('Erro ao buscar lotes');
       }
+    });
+  }
+
+  PesquisarLoteNomeOM() {
+    const termo = this.inputPesquisa.toLowerCase();
+
+    this.lotesFiltrados = this.lotes.filter(lote => {
+      const valorCampo = lote[this.tipoPesquisa]?.toString().toLowerCase() || '';
+      return valorCampo.includes(termo);
     });
   }
 }
