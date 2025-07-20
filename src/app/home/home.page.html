@@ -35,8 +35,8 @@
   <ion-list *ngIf="lotesFiltrados.length > 0; else vazio">
     <ion-item *ngFor="let lote of lotesFiltrados">
       <ion-label>
-        <h2>{{ lote.ordem_montagem }} - {{ lote.equipamento }}</h2>
-        <p>Cliente: {{ lote.cliente }}</p>
+        <h2>{{ lote.ordem_montagem }} - {{ lote.cliente }}</h2>
+        <p>{{ lote.equipamento }}</p>
         <p>OV: {{ lote.ordem_venda }} | Item: {{ lote.item_venda }}</p>
         <p>Recebido: {{ lote.quantidade_recebida }} / {{ lote.quantidade_total }}</p>
         <p>Data: {{ lote.data_recebimento | date:'short' }}</p>
@@ -46,7 +46,7 @@
 
   <ng-template #vazio>
     <ion-text color="medium">
-      <p class="ion-text-center">ote encontrado.</p>
+      <p class="ion-text-center">Nenhum lote encontrado.</p>
     </ion-text>
   </ng-template>
 </ion-content>

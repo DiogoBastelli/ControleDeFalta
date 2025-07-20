@@ -7,20 +7,35 @@ import { LoteService } from '../services/lote.service';
   styleUrls: ['./novo-lote.page.scss'],
   standalone: false
 })
-export class NovoLotePage {
-  lote = {
-    om: '',
-    ov: '',
-    cliente: '',
-    item: '',
-    equipamento: '',
-    quantiDesc: '',
-    quantiTotal: ''
-  };
+  export class NovoLotePage {
+    lote = {
+      om: '',
+      ov: '',
+      cliente: '',
+      item: '',
+      equipamento: '',
+      quantiDesc: '',
+      quantiTotal: ''
+    };
 
-  constructor(private loteService: LoteService) {}
+    constructor(private loteService: LoteService) {}
 
-  cadastrarLote() {
+    cadastrarLote() {
+    const { om, ov, cliente, item, equipamento, quantiDesc, quantiTotal } = this.lote;
+
+    if (
+      !String(om).trim() ||
+      !String(ov).trim() ||
+      !String(cliente).trim() ||
+      !String(item).trim() ||
+      !String(equipamento).trim() ||
+      !String(quantiDesc).trim() ||
+      !String(quantiTotal).trim()
+    ) {
+      alert('Por favor, preencha todos os campos antes de cadastrar.');
+      return;
+    }
+
     this.loteService.cadastrarLote(this.lote).subscribe({
       next: (res: any) => {
         console.log('Resposta da API:', res);
@@ -36,12 +51,13 @@ export class NovoLotePage {
         };
       },
       error: (err) => {
-        console.error('Erro ao cadastrar lote:', err);
-        alert('Erro ao cadastrar lote');
+        if (err.status === 400 && err.error?.error) {
+          alert(err.error.error);
+        } else {
+          alert('Erro ao cadastrar lote');
+        }
       }
     });
   }
-
-  
 
 }
