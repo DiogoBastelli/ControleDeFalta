@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { LoteService } from '../services/lote.service';
+import { CameraService } from '../services/camera.service';
+import { createWorker } from 'tesseract.js';
 
 @Component({
   selector: 'app-novo-lote',
@@ -7,20 +9,80 @@ import { LoteService } from '../services/lote.service';
   styleUrls: ['./novo-lote.page.scss'],
   standalone: false
 })
-  export class NovoLotePage {
-    lote = {
-      om: '',
-      ov: '',
-      cliente: '',
-      item: '',
-      equipamento: '',
-      quantiDesc: '',
-      quantiTotal: ''
-    };
+export class NovoLotePage {
+  lote = {
+    om: '',
+    ov: '',
+    cliente: '',
+    item: '',
+    equipamento: '',
+    quantiDesc: '',
+    quantiTotal: ''
+  };
 
-    constructor(private loteService: LoteService) {}
+  imagemBase64: string | null = null;
 
-    cadastrarLote() {
+  constructor(
+    private loteService: LoteService,
+    private cameraService: CameraService
+  ) {}
+
+  async tirarFoto() {
+  try {
+    const foto = await this.cameraService.tirarFoto();
+
+    if (!foto) {
+      console.warn('Nenhuma imagem foi capturada.');
+      return;
+    }
+
+    this.imagemBase64 = foto;
+    console.log('Imagem capturada com sucesso!');
+
+    const worker = await createWorker();
+
+    await worker.load();
+    await worker.reinitialize('por'); 
+
+    const { data: { text } } = await worker.recognize(foto, {
+      logger: (m: any) => console.log(m)
+    } as any);
+
+    console.log('Texto extraído do OCR:', text);
+
+    await worker.terminate();
+
+    this.preencherCamposDoTexto(text);
+  } catch (error) {
+    console.error('Erro ao tirar foto ou processar OCR:', error);
+    alert('Erro ao tirar a foto ou processar o texto. Verifique a câmera e a imagem.');
+  }
+}
+
+
+
+  private preencherCamposDoTexto(texto: string) {
+  const linhas = texto.split('\n').map(l => l.trim());
+
+  linhas.forEach(linha => {
+    const partes = linha.split(':');
+    if (partes.length < 2) return;
+
+    const chave = partes[0].toLowerCase();
+    const valor = partes.slice(1).join(':').trim();
+
+    if (chave.includes('om')) this.lote.om = valor;
+    else if (chave.includes('ov')) this.lote.ov = valor;
+    else if (chave.includes('cliente')) this.lote.cliente = valor;
+    else if (chave.includes('item')) this.lote.item = valor;
+    else if (chave.includes('equipamento')) this.lote.equipamento = valor;
+    else if (chave.includes('descidos') || chave.includes('desc')) this.lote.quantiDesc = valor;
+    else if (chave.includes('quantidade total') || chave.includes('total')) this.lote.quantiTotal = valor;
+  });
+  }
+  
+
+  cadastrarLote() {
     const { om, ov, cliente, item, equipamento, quantiDesc, quantiTotal } = this.lote;
 
     if (
@@ -59,5 +121,4 @@ import { LoteService } from '../services/lote.service';
       }
     });
   }
-
 }
