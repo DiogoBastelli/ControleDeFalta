@@ -17,21 +17,26 @@ export class HomePage implements OnInit {
   constructor(private loteService: LoteService) {}
 
   ngOnInit() {
-    this.carregarLotes();
-  }
+  console.log('HomePage iniciado!');
+  this.carregarLotes();
+}
+
 
   carregarLotes() {
-    this.loteService.listarLotes().subscribe(
+  this.loteService.listarLotes().subscribe(
     (res: any) => {
+      console.log('Resposta API no celular:', res);
       this.lotes = res;
       this.lotesFiltrados = res;
     },
     (err) => {
-      console.error('Erro ao buscar lotes:', err);
+      console.error('Erro ao buscar lotes no celular:', err);
       alert('Erro ao buscar lotes');
     }
   );
-  }
+}
+
+
 
  pesquisarLotes() {
   const termo = this.inputPesquisa.toLowerCase();

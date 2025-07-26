@@ -12,12 +12,14 @@ export class LoteService {
   cadastrarLote(lote: any) {
     return this.http.post(this.apiUrl, lote);
   }
-  listarLotes() {
+
+ listarLotes() {
+  console.log('Chamando API:', this.apiUrl);
   return this.http.get(this.apiUrl); 
-  }
+}
+
 
   PesquisarLoteNomeOM() {
-  return this.http.get<any[]>('http://localhost:3000/lotes');
+    return this.http.get<any[]>(this.apiUrl); 
   }
-
 }
