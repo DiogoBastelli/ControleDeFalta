@@ -36,10 +36,10 @@
     <ion-item *ngFor="let lote of lotesFiltrados">
       <ion-label>
         <h2>{{ lote.ordem_montagem }} - {{ lote.cliente }}</h2>
-        <p>{{ lote.equipamento }}</p>
         <p>OV: {{ lote.ordem_venda }} | Item: {{ lote.item_venda }}</p>
-        <p>Recebido: {{ lote.quantidade_recebida }} / {{ lote.quantidade_total }}</p>
-        <p>Data: {{ lote.data_recebimento | date:'short' }}</p>
+        <p>Equipamento: {{ lote.equipamento }} | Quantidade Total: {{ lote.quantidade_total }} </p>
+        <p>Quantidade Reprovado: {{ lote.reprovado }} | Defeito:{{ lote.defeito }}</p>
+        <p>Local:{{ lote.local }} | Data: {{ lote.data | date:'short' }} 
       </ion-label>
     </ion-item>
   </ion-list>
