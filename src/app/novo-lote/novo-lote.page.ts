@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { LoteService } from '../services/lote.service';
 import { CameraService } from '../services/camera.service';
-import { createWorker } from 'tesseract.js';
+const Tesseract = require('tesseract.js');
+
 
 @Component({
   selector: 'app-novo-lote',
@@ -9,8 +10,8 @@ import { createWorker } from 'tesseract.js';
   styleUrls: ['./novo-lote.page.scss'],
   standalone: false
 })
-  export class NovoLotePage {
-    lote = {
+export class NovoLotePage {
+  lote = {
     om: '',
     ov: '',
     cliente: '',
@@ -20,9 +21,8 @@ import { createWorker } from 'tesseract.js';
     reprovado: '',
     local: '',
     defeito: '',
-    status: 'Aguardando Retrabalho' 
+    status: 'Aguardando Retrabalho'
   };
-
 
   imagemBase64: string | null = null;
 
@@ -32,60 +32,43 @@ import { createWorker } from 'tesseract.js';
   ) {}
 
   async tirarFoto() {
-    try {
-      const foto = await this.cameraService.tirarFoto();
+  this.imagemBase64 = await this.cameraService.tirarFoto();
 
-      if (!foto) {
-        console.warn('Nenhuma imagem foi capturada.');
-        return;
-      }
-
-      this.imagemBase64 = foto;
-      console.log('Imagem capturada com sucesso!');
-
-      const worker = await createWorker();
-
-      await worker.load();
-      await worker.reinitialize('por'); 
-
-      const { data: { text } } = await worker.recognize(foto, {
-        logger: (m: any) => console.log(m)
-      } as any);
-
-      console.log('Texto extraído do OCR:', text);
-
-      await worker.terminate();
-
-      this.preencherCamposDoTexto(text);
-    } catch (error) {
-      console.error('Erro ao tirar foto ou processar OCR:', error);
-      alert('Erro ao tirar a foto ou processar o texto. Verifique a câmera e a imagem.');
-    }
+  if (!this.imagemBase64) {
+    alert('Foto não capturada.');
+    return;
   }
 
+  const resultado = await Tesseract.recognize(this.imagemBase64, 'eng', {
+    logger: (m: any) => console.log(m)  
+  });
+
+  const texto = resultado.data.text;
+  console.log('Texto extraído:', texto);
+
+  this.preencherCampos(texto);
+}
 
 
-  private preencherCamposDoTexto(texto: string) {
-    const linhas = texto.split('\n').map(l => l.trim());
+  preencherCampos(texto: string) {
+  const t = texto.toUpperCase();
 
-    linhas.forEach(linha => {
-      const partes = linha.split(':');
-      if (partes.length < 2) return;
+  const matchOM = t.match(/OM[:\s]*([0-9]{6,})/);
+  const matchOV = t.match(/OV[:\s]*([0-9]{6,})/);
+  const matchCliente = t.match(/CLIENTE[:\s]*(.+?)SEW/);
+  const matchItem = t.match(/ITEM[:\s]*([0-9]+)/);
+  const matchQt = t.match(/QT[:\s]*([0-9]+)/);
+  const matchEquip = t.match(/EQUIP[:\s]*([A-Z0-9 ]{5,})/);
 
-      const chave = partes[0].toLowerCase();
-      const valor = partes.slice(1).join(':').trim();
+  this.lote.om = matchOM?.[1] || '';
+  this.lote.ov = matchOV?.[1] || '';
+  this.lote.cliente = matchCliente?.[1]?.trim() || '';
+  this.lote.item = matchItem?.[1] || '';
+  this.lote.quantiTotal = matchQt?.[1] || '';
+  this.lote.equipamento = matchEquip?.[1]?.trim() || '';
 
-      if (chave.includes('om')) this.lote.om = valor;
-      else if (chave.includes('ov')) this.lote.ov = valor;
-      else if (chave.includes('cliente')) this.lote.cliente = valor;
-      else if (chave.includes('item')) this.lote.item = valor;
-      else if (chave.includes('equipamento')) this.lote.equipamento = valor;
-      else if (chave.includes('reprovado') || chave.includes('desc')) this.lote.reprovado = valor;
-      else if (chave.includes('quantidade total') || chave.includes('total')) this.lote.quantiTotal = valor;
-      else if (chave.includes('local')) this.lote.local = valor;
-      else if (chave.includes('defeito')) this.lote.defeito = valor;
-    });
-  }
+  console.log('Campos preenchidos com OCR:', this.lote);
+}
 
   cadastrarLote() {
     const { om, ov, cliente, item, equipamento, reprovado, quantiTotal, local, defeito } = this.lote;
@@ -130,5 +113,4 @@ import { createWorker } from 'tesseract.js';
       }
     });
   }
-
 }
