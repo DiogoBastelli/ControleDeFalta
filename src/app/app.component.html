@@ -1,24 +1,25 @@
 <ion-app>
-  <ion-menu contentId="main-content" type="overlay">
+  <ion-menu  contentId="main-content" type="overlay">
     <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Menu</ion-title>
+      <ion-toolbar id="teste">
+        <img src="assets/imagens/logoSEW.png" alt="Logo SEW" class="logo" />
+        <ion-title>Ordens em Retrabalho </ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
-      <ion-list>
+    <ion-content >
+      <ion-list >
+        <ion-menu-toggle auto-hide="true">
+          <ion-item routerLink="/home" routerDirection="root">
+            Todas Ordens 
+          </ion-item>
+        </ion-menu-toggle>
         <ion-menu-toggle auto-hide="true">
           <ion-item routerLink="/novo-lote" routerDirection="root">
-            Novo Lote
+            Cadastrar Ordem 
           </ion-item>
         </ion-menu-toggle>
-        <ion-menu-toggle auto-hide="true">
-
-          <ion-item routerLink="/todos-lote" routerDirection="root">
-            TodosLotes
-          </ion-item>
-        </ion-menu-toggle>
+        
       </ion-list>
     </ion-content>
   </ion-menu>

@@ -1,6 +1,9 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Novo Lote</ion-title>
+<ion-header >
+  <ion-toolbar id="toolbarHeader">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Cadastro de Ordens</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -50,23 +53,11 @@
       <ion-input type="text" [(ngModel)]="lote.defeito" name="defeito" required></ion-input>
     </ion-item>
 
-    <ion-button (click)="tirarFoto()" >Tirar Foto do CheckList</ion-button>
-
     <ion-button (click)="cadastrarLote()">Cadastrar Lote</ion-button>
     
-    
-
   </form>
 
   <ion-button (click)="tirarFoto()">Tirar Foto</ion-button>
 
-<ion-img *ngIf="imagemBase64" [src]="imagemBase64"></ion-img>
-
-<ion-textarea
-  label="Texto OCR"
-  [(ngModel)]="ocrTexto"
-  autoGrow="true"
-  readonly
-></ion-textarea>
 
 </ion-content>

@@ -21,7 +21,6 @@ export class HomePage implements OnInit {
   this.carregarLotes();
 }
 
-
   carregarLotes() {
   this.loteService.listarLotes().subscribe(
     (res: any) => {
@@ -35,8 +34,6 @@ export class HomePage implements OnInit {
     }
   );
 }
-
-
 
  pesquisarLotes() {
   const termo = this.inputPesquisa.toLowerCase();
@@ -53,5 +50,4 @@ export class HomePage implements OnInit {
     return valorCampo.includes(termo);
   });
 }
-
 }

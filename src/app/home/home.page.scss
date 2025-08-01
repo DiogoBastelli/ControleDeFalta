@@ -36,6 +36,7 @@
   padding-right: 15px;
   padding-bottom: 15px;
 }
+
 .filtros-toolbar {
   display: flex;
   align-items: center;
@@ -52,8 +53,6 @@ ion-searchbar {
 
 }
 
-
-
 .select-personalizado {
   --color: white;         
   border-radius: 8px;
@@ -62,7 +61,6 @@ ion-searchbar {
   padding-right: 15px;
 }
 
-
-#header{
-  padding-top: 30px;
+#toolbarHeader{
+  padding-top: 55px;
 }
