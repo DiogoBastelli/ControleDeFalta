@@ -4,7 +4,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="ion-padding">
   <form (ngSubmit)="cadastrarLote()">
     <ion-item>
@@ -13,7 +12,7 @@
     </ion-item>
     <ion-item>
       <ion-label position="floating">Ordem De Venda</ion-label>
-      <ion-input type="nummber" [(ngModel)]="lote.ov" name="ov" required></ion-input>
+      <ion-input type="number" [(ngModel)]="lote.ov" name="ov" required></ion-input>
     </ion-item>
 
     <ion-item>
@@ -48,15 +47,26 @@
 
     <ion-item>
       <ion-label position="floating">Defeito</ion-label>
-      <ion-input type="text" [(ngModel)]="lote.defeito" name="Defeito" required></ion-input>
+      <ion-input type="text" [(ngModel)]="lote.defeito" name="defeito" required></ion-input>
     </ion-item>
 
-    <ion-button (click)="tirarFoto()">Tirar Foto do CheckList</ion-button>
+    <ion-button (click)="tirarFoto()" >Tirar Foto do CheckList</ion-button>
 
-
-    <ion-button expand="block" type="submit" class="ion-margin-top">
-      Cadastrar Lote
-    </ion-button>
+    <ion-button (click)="cadastrarLote()">Cadastrar Lote</ion-button>
+    
+    
 
   </form>
+
+  <ion-button (click)="tirarFoto()">Tirar Foto</ion-button>
+
+<ion-img *ngIf="imagemBase64" [src]="imagemBase64"></ion-img>
+
+<ion-textarea
+  label="Texto OCR"
+  [(ngModel)]="ocrTexto"
+  autoGrow="true"
+  readonly
+></ion-textarea>
+
 </ion-content>

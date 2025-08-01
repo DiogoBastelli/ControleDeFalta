@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { LoteService } from '../services/lote.service';
 import { CameraService } from '../services/camera.service';
-const Tesseract = require('tesseract.js');
-
+import { OcrService } from '../services/ocr.service';
+import { LoteService } from '../services/lote.service';
 
 @Component({
   selector: 'app-novo-lote',
@@ -11,64 +10,68 @@ const Tesseract = require('tesseract.js');
   standalone: false
 })
 export class NovoLotePage {
-  lote = {
-    om: '',
-    ov: '',
-    cliente: '',
-    item: '',
-    equipamento: '',
-    quantiTotal: '',
-    reprovado: '',
-    local: '',
-    defeito: '',
-    status: 'Aguardando Retrabalho'
-  };
-
+  lote = { om:'', ov:'', cliente:'', item:'', equipamento:'', quantiTotal:'', reprovado:'', local:'', defeito:'', status:'Aguardando Retrabalho' };
+  ocrTexto = '';
+  carregandoOCR = false;
   imagemBase64: string | null = null;
-
-  constructor(
-    private loteService: LoteService,
-    private cameraService: CameraService
-  ) {}
+  constructor(private cameraService: CameraService, private ocrService: OcrService, private loteService: LoteService) {}
 
   async tirarFoto() {
-  this.imagemBase64 = await this.cameraService.tirarFoto();
+    const base64 = await this.cameraService.tirarFotoBase64();
+    if (!base64) return;
 
-  if (!this.imagemBase64) {
-    alert('Foto não capturada.');
-    return;
+    this.carregandoOCR = true;
+    this.ocrTexto = await this.ocrService.reconhecerText(base64);
+    this.carregandoOCR = false;
+    
+    console.log('Texto capturado pelo OCR:', this.ocrTexto);
+    this.preencherCamposDoTexto(this.ocrTexto);
+    
   }
 
-  const resultado = await Tesseract.recognize(this.imagemBase64, 'eng', {
-    logger: (m: any) => console.log(m)  
-  });
 
-  const texto = resultado.data.text;
-  console.log('Texto extraído:', texto);
+  private preencherCamposDoTexto(texto: string) {
+  const linhas = texto.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-  this.preencherCampos(texto);
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i];
+
+    if (/EQUIP/i.test(linha)) {
+      this.lote.equipamento = linha.replace(/EQUIP[.:]*\s*/i, '').trim();
+    }
+
+    if (/CLIENTE/i.test(linha)) {
+      const match = linha.match(/CLIENTE\s+(.*?)\s+OM[: ]*(\d*)/i);
+      if (match) {
+        this.lote.cliente = match[1].trim();
+        if (match[2]) this.lote.om = match[2].trim();
+      } else {
+        this.lote.cliente = linha.replace(/CLIENTE\s*/i, '').trim();
+      }
+    }
+
+    if (/OM[: ]*$/i.test(linha) && i + 1 < linhas.length) {
+      this.lote.om = linhas[i + 1].trim();
+    }
+
+    if (/OV[: ]*$/i.test(linha) && i + 1 < linhas.length) {
+      this.lote.ov = linhas[i + 1].trim();
+    }
+
+    if (/QT[:]*$/i.test(linha) && i + 1 < linhas.length) {
+      this.lote.quantiTotal = linhas[i + 1].trim();
+    }
+
+    if (/ITEM[:]*$/i.test(linha) && i + 1 < linhas.length) {
+      this.lote.item = linhas[i + 1].trim();
+    }
+
+  }
 }
 
 
-  preencherCampos(texto: string) {
-  const t = texto.toUpperCase();
 
-  const matchOM = t.match(/OM[:\s]*([0-9]{6,})/);
-  const matchOV = t.match(/OV[:\s]*([0-9]{6,})/);
-  const matchCliente = t.match(/CLIENTE[:\s]*(.+?)SEW/);
-  const matchItem = t.match(/ITEM[:\s]*([0-9]+)/);
-  const matchQt = t.match(/QT[:\s]*([0-9]+)/);
-  const matchEquip = t.match(/EQUIP[:\s]*([A-Z0-9 ]{5,})/);
 
-  this.lote.om = matchOM?.[1] || '';
-  this.lote.ov = matchOV?.[1] || '';
-  this.lote.cliente = matchCliente?.[1]?.trim() || '';
-  this.lote.item = matchItem?.[1] || '';
-  this.lote.quantiTotal = matchQt?.[1] || '';
-  this.lote.equipamento = matchEquip?.[1]?.trim() || '';
-
-  console.log('Campos preenchidos com OCR:', this.lote);
-}
 
   cadastrarLote() {
     const { om, ov, cliente, item, equipamento, reprovado, quantiTotal, local, defeito } = this.lote;
@@ -103,6 +106,7 @@ export class NovoLotePage {
           defeito: '',
           status: 'Aguardando Retrabalho'
         };
+        this.ocrTexto = '';
       },
       error: (err) => {
         if (err.status === 400 && err.error?.error) {

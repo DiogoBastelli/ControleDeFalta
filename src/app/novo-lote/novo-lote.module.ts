@@ -1,20 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
 
-import { NovoLotePageRoutingModule } from './novo-lote-routing.module';
-
 import { NovoLotePage } from './novo-lote.page';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NovoLotePageRoutingModule
-    
+    RouterModule.forChild([{ path: '', component: NovoLotePage }])
   ],
   declarations: [NovoLotePage]
 })

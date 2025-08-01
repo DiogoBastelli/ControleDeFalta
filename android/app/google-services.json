@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "493940200652",
+    "project_id": "controlederetrabalho",
+    "storage_bucket": "controlederetrabalho.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493940200652:android:f3462486b54c9ed4c85e69",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmrEdyoQabnFiEJHkYMXyC3Be-ELYlYoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
